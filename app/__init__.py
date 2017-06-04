@@ -35,6 +35,8 @@ class login_user(FlaskForm):
 def index():
     form = addIP()
     iplist = IPlist.query.all()
+    if not session.has_key('logged_in'):
+        session['logged_in'] = False
     if request.method == 'POST':
         if form.validate_on_submit():
             newip = IPlist(name=form.name.data.title(), game=form.game.data.title(), ip=form.ip.data)
