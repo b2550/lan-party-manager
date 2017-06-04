@@ -1,0 +1,95 @@
+<head>
+  <title>SLANP LAN Manager</title>
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+  <link href="{{url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+  <style type='text/css'>
+  body {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  .navbar {
+    margin-bottom: 20px;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+  <script src="{{url_for('static', filename='js/jquery.min.js') }}"></script>
+  <script src="{{url_for('static', filename='js/bootstrap.min.js') }}"></script>
+  <!-- Static navbar -->
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#"><img alt="Brand" src="{{ url_for('static', filename='SLANP.png') }}" height="40px" style="margin-top:-10px"></a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="./">IP List<span class="sr-only">(current)</span></a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          {% if session['logged_in'] %}
+            <p class='navbar-text'>Hello Party Organizer!</p>
+            <li><a href="{{ url_for("logout") }}">Log out</a></li>
+          {% else %}
+          <li><a href="{{ url_for("login") }}">Admin</a></li>
+          {% endif %}
+        </ul>
+      </div><!--/.nav-collapse -->
+    </div><!--/.container-fluid -->
+  </nav>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+<form method="POST" action="/">
+  {{ form.csrf_token }}
+  <!-- <div class="row">
+        <div class="col-lg-6"> -->
+  <div class="form-group">
+    {{ form.name.label }} {{ form.name(class='form-control', placeholder='First Name') }}
+  </div>
+  <div class="form-group">
+    {{ form.game.label }} {{ form.game(class='form-control', placeholder='Game (include pack if applicable)') }}
+  </div>
+  <div class="form-group">
+    {{ form.ip.label }} {{ form.ip(class='form-control', placeholder='IP (Ex: 10.0.1.101 or 192.168.0.22)') }}
+  </div>
+  <input class="btn btn-primary" type="submit" value="Add">
+  <!-- </div>
+  </div> -->
+</form>
+  <hr />
+  <table class="table">
+    <tr>
+      <th>Name</th>
+      <th>Game</th>
+      <th>IP</th>
+      {% if session['logged_in'] %}
+          <th>Delete</th>
+      {% endif %}
+    </tr>
+    {% for entry in list %}
+    <tr>
+        <td>{{ entry.name|e }}</td>
+        <td>{{ entry.game|e }}</td>
+        <td>{{ entry.ip|e }}</td>
+        {% if session['logged_in'] %}
+            <td><a href="{{ url_for('delete', item=entry.id) }}">Delete</a></td>
+        {% endif %}
+
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+</body>

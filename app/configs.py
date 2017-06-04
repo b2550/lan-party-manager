@@ -1,0 +1,7 @@
+import os
+
+SECRET_KEY = 'secret'
+SQLALCHEMY_DATABASE_URI = 'sqlite:///database.sqlite3'
+SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+ADMIN_PASSKEY = 'SLANP2017b2550'
